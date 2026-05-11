@@ -1,103 +1,75 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Floating Hearts</title>
 
 <style>
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
+body{
+    margin:0;
+    overflow:hidden;
+    background:#ffeaf4;
+}
 
-    body {
-        overflow: hidden;
-        background: linear-gradient(135deg, #ffe6f0, #fff5f8);
-        width: 100vw;
-        height: 100vh;
-    }
-
-    .heart {
-        position: absolute;
-        font-size: 50px;
-        user-select: none;
-        pointer-events: none;
-        filter: drop-shadow(0 0 8px rgba(255, 100, 150, 0.4));
-    }
+.heart{
+    position:absolute;
+    font-size:50px;
+}
 </style>
 </head>
 
 <body>
 
 <script>
-    const heartCount = 7;
-    const hearts = [];
 
-    for (let i = 0; i < heartCount; i++) {
+const hearts = [];
+const total = 7;
 
-        const heart = document.createElement("div");
-        heart.classList.add("heart");
-        heart.innerHTML = "❤";
+for(let i=0; i<total; i++){
 
-        document.body.appendChild(heart);
+    const div = document.createElement("div");
+    div.className = "heart";
+    div.innerHTML = "💖";
 
-        const size = 35 + Math.random() * 30;
+    document.body.appendChild(div);
 
-        heart.style.fontSize = `${size}px`;
+    hearts.push({
+        el: div,
+        x: Math.random() * window.innerWidth,
+        y: Math.random() * window.innerHeight,
 
-        hearts.push({
-            el: heart,
+        dx: (Math.random() * 2 - 1),
+        dy: (Math.random() * 2 - 1),
 
-            x: Math.random() * (window.innerWidth - size),
-            y: Math.random() * (window.innerHeight - size),
-
-            // 느리게 움직이도록 속도 설정
-            vx: (Math.random() * 1.2 + 0.4) * (Math.random() < 0.5 ? -1 : 1),
-            vy: (Math.random() * 1.2 + 0.4) * (Math.random() < 0.5 ? -1 : 1),
-
-            size: size
-        });
-    }
-
-    function animate() {
-
-        hearts.forEach(h => {
-
-            h.x += h.vx;
-            h.y += h.vy;
-
-            // 좌우 벽 충돌
-            if (h.x <= 0 || h.x + h.size >= window.innerWidth) {
-                h.vx *= -1;
-            }
-
-            // 위아래 벽 충돌
-            if (h.y <= 0 || h.y + h.size >= window.innerHeight) {
-                h.vy *= -1;
-            }
-
-            h.el.style.transform = `translate(${h.x}px, ${h.y}px)`;
-        });
-
-        requestAnimationFrame(animate);
-    }
-
-    animate();
-
-    // 창 크기 변경 대응
-    window.addEventListener("resize", () => {
-        hearts.forEach(h => {
-            if (h.x + h.size > window.innerWidth) {
-                h.x = window.innerWidth - h.size;
-            }
-
-            if (h.y + h.size > window.innerHeight) {
-                h.y = window.innerHeight - h.size;
-            }
-        });
+        size: 50
     });
+}
+
+function moveHearts(){
+
+    hearts.forEach(h => {
+
+        h.x += h.dx;
+        h.y += h.dy;
+
+        if(h.x <= 0 || h.x >= window.innerWidth - h.size){
+            h.dx *= -1;
+        }
+
+        if(h.y <= 0 || h.y >= window.innerHeight - h.size){
+            h.dy *= -1;
+        }
+
+        h.el.style.left = h.x + "px";
+        h.el.style.top = h.y + "px";
+    });
+
+    requestAnimationFrame(moveHearts);
+}
+
+moveHearts();
+
 </script>
 
 </body>
